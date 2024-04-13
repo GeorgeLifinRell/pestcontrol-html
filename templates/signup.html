@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
-    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="../static/style.css">
 </head>
-<body id="signup-body" background="./assets/signup-bg.png">
+<body id="signup-body" background="../static/assets/signup-bg.png">
     <center>
     <form class="form">
         <p class="title">Register </p>
@@ -15,6 +15,10 @@
             <input required="" placeholder="" type="text" class="input">
             <span>Full Name</span>
         </label> 
+        <label>
+            <input required="" placeholder="" type="number" class="input">
+            <span>Phone Number (WhatsApp)</span>
+        </label>
         <label>
             <input required="" placeholder="" type="email" class="input">
             <span>Email</span>
@@ -29,7 +33,7 @@
             <span>Confirm password</span>
         </label>
         <button type="submit" class="submit">Submit</button>
-        <p class="signin">Already have an acount ? <a href="#">Signin</a> </p>
+        <p class="signin">Already have an acount ? <a href="/login">Log In</a> </p>
     </form>
     </center>
 </body>
