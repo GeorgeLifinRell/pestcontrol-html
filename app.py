@@ -4,7 +4,7 @@ from keras.preprocessing import image
 import numpy as np
 
 # Load the trained model
-model_path = './models/Resnet pest.h5'
+model_path = './models/res.h5'
 try:
     model = load_model(model_path)
     print("Model loaded successfully.")
@@ -61,6 +61,7 @@ def detect_pest():
 @app.route('/detect-pest', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
+        pest_names = ['aphids', 'armyworm', 'beetle', 'bollworm', 'grasshopper', 'mites', 'mosquito', 'sawfly', 'stem borer']
         try:
             file = request.files['file']
             if file:
@@ -70,12 +71,16 @@ def upload_file():
                 if prediction is not None:
                     print("Prediction:", prediction)
                     # Convert prediction to human-readable format if needed
-                    return render_template('detect-pest.html', prediction=prediction)
+                    # Find the index with the maximum value
+                    max_index = np.argmax(prediction)
+                    pest_predicted = pest_names[max_index]
+                    print(pest_predicted)
+                    return render_template('detect-pest.html', prediction=pest_predicted)
                 else:
-                    return render_template('detect-pest.html', prediction="Error processing image.")
+                    return render_template('detect-pest.html', error="Error processing image.")
         except Exception as e:
             print("Error uploading file:", e)
-            return render_template('detect-pest.html', prediction="Error uploading file.")
+            return render_template('detect-pest.html', error="Error uploading file.")
     return render_template('detect-pest.html')
 
 if __name__ == '__main__':

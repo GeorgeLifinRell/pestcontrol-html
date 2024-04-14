@@ -28,13 +28,21 @@
     </nav>
     <h1>Detect Pest</h1>
 
-    <div>
-        <label for="fileInput">Input Image here</label>
+    <div class="flex">
+      <label for="fileInput">Input Image here
         <input type="file" id="fileInput">
+      </label>
         <button onclick="uploadFile()">Upload File</button>
     </div>
 
-    <div id="predictions"></div>
+    <div id="predictions">
+      {% if prediction %}
+        <p>Predicted Pest: {{ prediction }}</p>
+      {% endif %}
+      {% if error %}
+        <p>Error: {{ error }}</p>
+      {% endif %}
+    </div>
 
     <button onclick="requestRecommendation()">Need Pesticide Recommendation?</button>
     <script>
