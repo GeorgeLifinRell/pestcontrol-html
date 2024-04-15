@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from keras.models import load_model
 from keras.preprocessing import image
 import numpy as np
@@ -75,12 +75,15 @@ def upload_file():
                     max_index = np.argmax(prediction)
                     pest_predicted = pest_names[max_index]
                     print(pest_predicted)
-                    return render_template('detect-pest.html', prediction=pest_predicted)
+                    return jsonify({'pest_predicted': pest_predicted})
+                    # return render_template('detect-pest.html', predict=str(pest_predicted))
                 else:
-                    return render_template('detect-pest.html', error="Error processing image.")
+                    # return render_template('detect-pest.html', error="Error processing image.")
+                    return jsonify({'error': 'Error processing image'})
         except Exception as e:
             print("Error uploading file:", e)
-            return render_template('detect-pest.html', error="Error uploading file.")
+            # return render_template('detect-pest.html', error="Error uploading file.")
+            return jsonify({ 'error': 'Error uploading file.' })
     return render_template('detect-pest.html')
 
 if __name__ == '__main__':

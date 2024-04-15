@@ -7,65 +7,63 @@
     <title>Pest Detection</title>
 </head>
 <body>
-    <nav class="navbar">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a href="#" class="nav-link">About Us</a>
-          </li>
-          <li class="nav-item">
-            <a href="/" class="nav-link">Home</a>
-          </li>
-          <li class="nav-item">
-            <a href="/login" class="nav-link">Login</a>
-          </li>
-          <li class="nav-item">
-            <a href="/get-pesticide" class="nav-link">Get Pesticide</a>
-          </li>
-          <li class="nav-item">
-            <a href="/detect-pest" class="nav-link">Detect Pest</a>
-          </li>
-        </ul>
-    </nav>
-    <h1>Detect Pest</h1>
-
-    <div class="flex">
-      <label for="fileInput">Input Image here
+  <nav class="navbar">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a href="#" class="nav-link">About Us</a>
+        </li>
+        <li class="nav-item">
+          <a href="/" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item">
+          <a href="/login" class="nav-link">Login</a>
+        </li>
+        <li class="nav-item">
+          <a href="/get-pesticide" class="nav-link">Get Pesticide</a>
+        </li>
+        <li class="nav-item">
+          <a href="/detect-pest" class="nav-link">Detect Pest</a>
+        </li>
+      </ul>
+  </nav>
+  <div class="container">
+    <center><h1 id="heading">Detect Pest</h1></center>
+    <div class="image-upload-container">
+      <label for="fileInput">Upload Image here
         <input type="file" id="fileInput">
       </label>
-        <button onclick="uploadFile()">Upload File</button>
+        <button id="upload-file" onclick="uploadFileAndGetPrediction()">Upload File</button>
     </div>
-
-    <div id="predictions">
-      {% if prediction %}
-        <p>Predicted Pest: {{ prediction }}</p>
-      {% endif %}
-      {% if error %}
-        <p>Error: {{ error }}</p>
-      {% endif %}
+    <div id="prediction-container">
+      <center>
+        <p id="prediction-result"></p>
+      </center>
     </div>
+    <a id="get-pesticide-recommendation" href="/get-pesticide">Get Pesticide Recommendation</a>
+  </div>
+  <script>
+      async function uploadFileAndGetPrediction() {
+          const fileInput = document.getElementById('fileInput');
+          const file = fileInput.files[0];
+          const formData = new FormData();
+          formData.append('file', file);
 
-    <button onclick="requestRecommendation()">Need Pesticide Recommendation?</button>
-    <script>
-        function uploadFile() {
-            const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
-            const formData = new FormData();
-            formData.append('file', file);
-
-            fetch('/detect-pest', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('predictions').innerText = data.predictions;
-            })
-            .catch(error => console.error('Error:', error));
-        }
-
-        function requestRecommendation() {
-            // Add logic to request pesticide recommendation from Flask backend
-        }
-    </script>
+          await fetch('/detect-pest', {
+              method: 'POST',
+              body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+            if(data.pest_predicted) {
+              document.getElementById('prediction-result').innerText = data.pest_predicted;
+            } else {
+              document.getElementById('prediction-result').innerText = data.error;
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error)
+          });
+      }
+  </script>
 </body>
 </html>
