@@ -8,16 +8,16 @@
 </head>
 <body id="login-body" background="../static/assets/login-bg.png">
     <center>
-        <form class="form">
+        <form class="form" method="post" action="/login">
             <p class="title">Login </p>
             <p class="message">Login now and explore our endless possibilities. </p> 
             <label>
-                <input required="" placeholder="" type="email" class="input">
+                <input required="" placeholder="" type="email" class="input" name="email">
                 <span>Email</span>
             </label> 
                 
             <label>
-                <input required="" placeholder="" type="password" class="input">
+                <input required="" placeholder="" type="password" class="input" name="password">
                 <span>Password</span>
             </label>
             <button type="submit" class="submit">Login</button>

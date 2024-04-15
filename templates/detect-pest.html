@@ -43,26 +43,26 @@
   </div>
   <script>
       async function uploadFileAndGetPrediction() {
-          const fileInput = document.getElementById('fileInput');
-          const file = fileInput.files[0];
-          const formData = new FormData();
-          formData.append('file', file);
+        const fileInput = document.getElementById('fileInput');
+        const file = fileInput.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
 
-          await fetch('/detect-pest', {
-              method: 'POST',
-              body: formData
-          })
-          .then(response => response.json())
-          .then(data => {
-            if(data.pest_predicted) {
-              document.getElementById('prediction-result').innerText = data.pest_predicted;
-            } else {
-              document.getElementById('prediction-result').innerText = data.error;
-            }
-          })
-          .catch(error => {
-            console.error('Error:', error)
-          });
+        await fetch('/detect-pest', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if(data.pest_predicted) {
+            document.getElementById('prediction-result').innerText = data.pest_predicted;
+          } else {
+            document.getElementById('prediction-result').innerText = data.error;
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error)
+        });
       }
   </script>
 </body>

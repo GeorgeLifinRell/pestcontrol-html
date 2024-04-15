@@ -1,3 +1,5 @@
 .hintrc
+.env
+Pesticide_Firebase_Service_Account.json
 /models
 /images

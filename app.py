@@ -2,6 +2,35 @@ from flask import Flask, render_template, request, jsonify
 from keras.models import load_model
 from keras.preprocessing import image
 import numpy as np
+import firebase_admin
+from firebase_admin import credentials, auth
+
+# Initialize the Firebase Admin SDK
+cred = credentials.Certificate('Pesticide_Firebase_Service_Account.json')
+firebase_admin.initialize_app(cred)
+
+# Create a new user with email and password
+def create_firebase_user(email, password):
+    try:
+        user = auth.create_user(email=email, password=password)
+        print("Successfully created user: {0}".format(user.uid))
+        return user.uid
+    except Exception as e:
+        print("Error creating user: {0}".format(e))
+        return None
+    
+# Check if a user can sign in with email and password
+def check_signin_with_email_and_password(email, password):
+    try:
+        user = auth.get_user_by_email(email=email)
+        print("User signed in successfully: {0}".format(user.uid))
+        return 'success'
+    except auth.UserNotFoundError:
+        print("User not found: {0}".format(email))
+        return 'user_not_found'
+    except Exception as e:
+        print("Error checking sign-in: {0}".format(e))
+        return 'error'
 
 # Load the trained model
 model_path = './models/res.h5'
@@ -38,17 +67,41 @@ def make_prediction(image_path):
 
 app = Flask(__name__)
 
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
 @app.route('/')
 def home():
     return render_template('home.html')
 
-@app.route('/login')
-def login():
+@app.route('/login', methods=['GET', 'POST'])
+def handle_login_request():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        login_result = check_signin_with_email_and_password(email=email, password=password)
+        if login_result == 'success':
+            return home()
+        elif login_result == 'wrong_password':
+            return jsonify({'error': login_result})
+        elif login_result == 'user_not_found':
+            return jsonify({'error': login_result})
     return render_template('login.html')
 
 @app.route('/signup')
 def signup():
     return render_template('signup.html')
+
+@app.route('/signup', methods=['GET', 'POST'])
+def handle_signup():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        user_creation_result = create_firebase_user(email=email, password=password)
+        if user_creation_result:
+            return login()
+    return render_template
 
 @app.route('/get-pesticide')
 def get_pesticide():
